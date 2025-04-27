@@ -20,9 +20,10 @@ public class ParticipantRestController {
 	@GetMapping("")
 	public Collection<Participant> getParticipants(
 			@RequestParam(value = "sortBy", required = false) String sortBy,
-			@RequestParam(value = "sortOrder", required = false) String sortOrder) {
+			@RequestParam(value = "sortOrder", required = false) String sortOrder,
+			@RequestParam(value = "key", required = false) String key) {
 
-		return participantService.getAll(sortBy, sortOrder);
+		return participantService.getAll(sortBy, sortOrder, key);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

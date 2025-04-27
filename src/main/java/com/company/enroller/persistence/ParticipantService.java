@@ -19,10 +19,16 @@ public class ParticipantService {
         connector = DatabaseConnector.getInstance();
     }
 
-    public Collection<Participant> getAll(String sortBy, String sortOrder) {
+    public Collection<Participant> getAll(String sortBy, String sortOrder, String key) {
         String hql = "FROM Participant";
         Query query = connector.getSession().createQuery(hql);
         List<Participant> participants = query.list();
+
+        if (key != null && !key.isEmpty()) {
+            participants = participants.stream()
+                    .filter(p -> p.getLogin().toLowerCase().contains(key.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
 
         if (sortBy != null && sortBy.equalsIgnoreCase("login")) {
             Comparator<Participant> comparator = Comparator.comparing(Participant::getLogin, String.CASE_INSENSITIVE_ORDER);
