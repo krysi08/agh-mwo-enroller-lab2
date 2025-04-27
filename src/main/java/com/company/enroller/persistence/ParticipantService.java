@@ -6,6 +6,9 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component("participantService")
 public class ParticipantService {
@@ -16,15 +19,29 @@ public class ParticipantService {
         connector = DatabaseConnector.getInstance();
     }
 
-    public Collection<Participant> getAll() {
+    public Collection<Participant> getAll(String sortBy, String sortOrder) {
         String hql = "FROM Participant";
         Query query = connector.getSession().createQuery(hql);
-        return query.list();
+        List<Participant> participants = query.list();
+
+        if (sortBy != null && sortBy.equalsIgnoreCase("login")) {
+            Comparator<Participant> comparator = Comparator.comparing(Participant::getLogin, String.CASE_INSENSITIVE_ORDER);
+
+            if ("DESC".equalsIgnoreCase(sortOrder)) {
+                comparator = comparator.reversed();
+            }
+            participants = participants.stream()
+                    .sorted(comparator)
+                    .collect(Collectors.toList());
+        }
+
+        return participants;
     }
 
     public Participant findByLogin(String login) {
         return connector.getSession().get(Participant.class, login);
     }
+
 
     public Participant add(Participant participant) {
         Transaction transaction = connector.getSession().beginTransaction();
@@ -38,7 +55,6 @@ public class ParticipantService {
         connector.getSession().merge(participant);
         transaction.commit();
     }
-
 
     public void delete(Participant participant) {
         Transaction transaction = connector.getSession().beginTransaction();
