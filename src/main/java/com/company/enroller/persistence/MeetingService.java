@@ -46,4 +46,18 @@ public class MeetingService {
 		transaction.commit();
 	}
 
+	public void addParticipantToMeeting(Meeting meeting, Participant participant) {
+		meeting.addParticipant(participant);
+		update(meeting);
+	}
+
+	public void removeParticipantFromMeeting(Meeting meeting, Participant participant) {
+		meeting.removeParticipant(participant);
+		update(meeting);
+	}
+
+	public Collection<Participant> getParticipantsForMeeting(Meeting meeting) {
+		return meeting.getParticipants();
+	}
+
 }
