@@ -8,6 +8,7 @@ import com.company.enroller.persistence.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -21,6 +22,7 @@ public class MeetingRestController {
 
     @Autowired
     ParticipantService participantService;
+
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getMeetings() {
@@ -109,7 +111,6 @@ public class MeetingRestController {
         Collection<Participant> participants = meetingService.getParticipantsForMeeting(meeting);
         return ResponseEntity.ok(participants);
     }
-
 }
 
 
